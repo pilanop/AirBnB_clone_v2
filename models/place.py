@@ -4,7 +4,7 @@ import shlex
 
 from sqlalchemy.ext.declarative import declarative_base
 
-from models import Amenity
+from models.amenity import Amenity
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Table, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
@@ -33,8 +33,8 @@ class Place(BaseModel, Base):
         number_rooms: number of room in int
         number_bathrooms: number of bathrooms in int
         max_guest: maximum guest in int
-        price_by_night:: price for a staying in int
-        latitude: latitude in float
+        price_by_night:: pice for a staying in int
+        latitude: latitude in flaot
         longitude: longitude in float
         amenity_ids: list of Amenity ids
     """
@@ -52,9 +52,8 @@ class Place(BaseModel, Base):
     amenity_ids = []
 
     if getenv("HBNB_TYPE_STORAGE") == "db":
-        reviews = relationship("Review", cascade='all,'
-                                                 ' delete, delete-orphan',
-                               abckref="place")
+        reviews = relationship("Review", cascade='all, delete, delete-orphan',
+                               backref="place")
 
         amenities = relationship("Amenity", secondary=place_amenity,
                                  viewonly=False,
@@ -69,12 +68,12 @@ class Place(BaseModel, Base):
             for key in var:
                 review = key.replace('.', ' ')
                 review = shlex.split(review)
-                if review[0] == 'Review':
+                if (review[0] == 'Review'):
                     lista.append(var[key])
             for elem in lista:
-                if elem.place_id == self.id:
+                if (elem.place_id == self.id):
                     result.append(elem)
-            return result
+            return (result)
 
         @property
         def amenities(self):
